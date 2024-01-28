@@ -5,6 +5,17 @@
     width: 100%;
 }
 
+.randomButton {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--white);
+    cursor: pointer;
+    vertical-align: middle;
+}
+
 .counter {
     text-align: center;
 }
