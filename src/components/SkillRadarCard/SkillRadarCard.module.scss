@@ -4,3 +4,17 @@
     height: 100%;
     margin: 0 -120px;
 }
+
+.legend {
+    position: absolute;
+    right: 32px;
+    bottom: 24px;
+    display: flex;
+    gap: 40px;
+}
+
+.legendLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

@@ -113,41 +113,26 @@ const SkillRadarChart = ({ data: rawData, width, height }: SkillRadarChartProps)
         .y((d: any) => d.y)
         .curve(d3.curveLinearClosed);
 
+    const meanData: Record<string, number> = {};
+    [...rawData[0].allSkills.keys()].forEach((key) => {
+        meanData[key] = data.reduce((acc, cur) => acc + cur[key], 0) / data.length;
+    });
+
     const maxData: Record<string, number> = {};
+    const minData: Record<string, number> = {};
     data.forEach((d) =>
         Object.entries(d).forEach(([key, value]) => {
             maxData[key] ??= value;
+            minData[key] ??= value;
+
             maxData[key] = Math.max(maxData[key], value);
+            minData[key] = Math.min(minData[key], value);
         })
     );
 
-    // svg.selectAll('.data-stroke')
-    //     .data(data)
-    //     .join((enter) =>
-    //         enter
-    //             .insert('path')
-    //             .datum((d) => getGlobalPathCoordinates(d) as any)
-    //             .attr('d', line)
-    //             .attr('class', 'data-stroke')
-    //             .attr('stroke-opacity', '1')
-    //             .attr('stroke-width', '1')
-    //             .attr('stroke', '#111')
-    //             // .attr('stroke', (_, i) => color(i))
-    //             .attr('fill', 'none')
-    //     );
-
-    // svg.selectAll('.data-point')
-    //     .data(data)
-    //     .join((enter) =>
-    //         enter
-    //             .data((d) => getGlobalPathCoordinates(d))
-    //             .append('circle')
-    //             .attr('class', 'data-point')
-    //             .attr('cx', (d) => d.x)
-    //             .attr('cy', (d) => d.y)
-    //             .attr('r', 3)
-    //             .attr('fill', 'black')
-    //     );
+    const meanCoordinates = getGlobalPathCoordinates(meanData);
+    const maxCoordinates = getGlobalPathCoordinates(maxData);
+    const minCoordinates = getGlobalPathCoordinates(minData);
 
     return (
         <svg
@@ -169,6 +154,14 @@ const SkillRadarChart = ({ data: rawData, width, height }: SkillRadarChartProps)
                             <stop key={i} offset={stop.offset} stopColor={stop.color} />
                         ))}
                 </radialGradient>
+
+                <clipPath id={'minmax'}>
+                    <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d={`${line(maxCoordinates as any)} ${line(minCoordinates as any)}`}
+                    />
+                </clipPath>
             </defs>
             {/*Tick Circles*/}
             {ticks.map((tick) => {
@@ -237,48 +230,43 @@ const SkillRadarChart = ({ data: rawData, width, height }: SkillRadarChartProps)
                     </SkillRadarChartAxisLabel>
                 );
             })}
+
             {/*Max Data Fill*/}
-            {call(() => {
-                const data = getLocalPathCoordinates(maxData);
-                return (
-                    <circle
-                        cx={width / 2}
-                        cy={height / 2}
-                        r={radialScale(max)}
-                        clipPath={`path('${line(data as any)}')`}
-                        fill={'url(#stepGradient)'}
-                    />
-                );
-            })}
+            <circle
+                cx={width / 2}
+                cy={height / 2}
+                r={radialScale(max)}
+                clipPath={`url(#minmax)`}
+                fill={'url(#stepGradient)'}
+            />
+
             {/*Max Data Stroke*/}
-            {call(() => {
-                const data = getGlobalPathCoordinates(maxData);
-                return (
-                    <path
-                        className={'max-data-stroke'}
-                        d={line(data as any) as string}
-                        strokeWidth={3}
-                        stroke={'var(--black)'}
-                        fill={'none'}
-                    />
-                );
-            })}
-            {/*Data Points*/}
-            {/*{data.flatMap((d, outerIndex) => {*/}
-            {/*    const positions = getGlobalPathCoordinates(d);*/}
-            {/*    return positions.map((p, i) => {*/}
-            {/*        return (*/}
-            {/*            <circle*/}
-            {/*                key={`${outerIndex}:${i}`}*/}
-            {/*                cx={p.x}*/}
-            {/*                cy={p.y}*/}
-            {/*                r={1.5}*/}
-            {/*                fill={'var(--black)'}*/}
-            {/*                fillOpacity={0.3}*/}
-            {/*            />*/}
-            {/*        );*/}
-            {/*    });*/}
-            {/*})}*/}
+            <path
+                className={'max-data-stroke'}
+                d={line(maxCoordinates as any) as string}
+                strokeWidth={3}
+                stroke={'var(--black)'}
+                fill={'none'}
+            />
+
+            {/*Min Data Stroke*/}
+            <path
+                className={'min-data-stroke'}
+                d={line(minCoordinates as any) as string}
+                strokeWidth={3}
+                stroke={'var(--black)'}
+                fill={'none'}
+            />
+
+            {/*Mean Data Stroke*/}
+            <path
+                className={'mean-data-stroke'}
+                d={line(meanCoordinates as any) as string}
+                strokeDasharray={'12px 6px'}
+                strokeWidth={3}
+                stroke={'var(--black)'}
+                fill={'none'}
+            />
         </svg>
     );
 };
