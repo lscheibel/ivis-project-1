@@ -14,14 +14,18 @@ export const queryParamAtom = (
 ): Atom<string | null> => {
     const { replaceState = true, validateHydration = () => true } = options;
 
-    const setupInternalAtom = () => {
+    const getValueFromQueryParams = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const valueFromQueryParams = urlParams.get(key);
         const valueValid = valueFromQueryParams == null ? true : validateHydration(valueFromQueryParams);
-        return atom(valueValid ? valueFromQueryParams ?? initialValue : initialValue);
+        return valueValid ? valueFromQueryParams : initialValue;
     };
 
-    const internalAtom = setupInternalAtom();
+    const internalAtom = atom(getValueFromQueryParams() ?? initialValue);
+
+    window.addEventListener('popstate', () => {
+        internalAtom.set(getValueFromQueryParams());
+    });
 
     const setParams = (value: string | null) => {
         const urlParams = new URLSearchParams(window.location.search);
