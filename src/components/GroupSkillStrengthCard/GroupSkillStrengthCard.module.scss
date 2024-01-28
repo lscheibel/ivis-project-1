@@ -1,0 +1,22 @@
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.result {
+    font-weight: bold;
+    font-size: 40px;
+    display: block;
+    line-height: 1;
+    margin-top: 24px;
+}
+
+.emojiImg {
+    position: absolute;
+    bottom: -16px;
+    right: -24px;
+
+    width: 128px;
+    height: 128px;
+}

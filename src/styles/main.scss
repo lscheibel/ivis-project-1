@@ -1,0 +1,47 @@
+@import 'normalize';
+@import 'font-faces';
+@import 'variables';
+
+html,
+body {
+    background: var(--black);
+    font-family: 'Syne', sans-serif;
+    color: var(--white);
+}
+
+.hide-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: dark;
+
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    $tint: #f7dddc;
+    $width: 0px;
+    $borderWidth: 0px;
+
+    @media (pointer: fine) {
+        &::-webkit-scrollbar {
+            width: $width;
+            height: $width;
+        }
+
+        ::-webkit-scrollbar-track {
+            box-shadow: inset calc(-1 * #{$width}) 0 0 0 $tint;
+            border-left: solid $borderWidth transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            box-shadow: inset 0 0 $width $width darken($tint, 15%);
+            border-left: solid $borderWidth transparent;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            box-shadow: inset 0 0 $width $width darken($tint, 25%);
+        }
+
+        &::-webkit-scrollbar-thumb:active {
+            box-shadow: inset 0 0 $width $width darken($tint, 30%);
+        }
+    }
+}

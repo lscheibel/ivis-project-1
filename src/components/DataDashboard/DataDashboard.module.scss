@@ -1,0 +1,10 @@
+.container {
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        'strengths skills'
+        'interests skills'
+        'averageSkillScore averageSkillScore';
+    grid-gap: 24px;
+}

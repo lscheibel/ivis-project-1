@@ -1,0 +1,170 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.counter {
+    text-align: center;
+}
+
+.select {
+    width: 100%;
+    border: none;
+
+    * {
+        box-shadow: none !important;
+    }
+
+    .control {
+        height: 64px;
+        border-radius: var(--radius-normal);
+        border: none;
+        background: var(--white);
+        overflow: hidden;
+    }
+
+    .dropdownIndicator {
+        width: 40px;
+        height: 40px;
+        background: var(--black);
+        color: var(--white);
+        font-size: 40px;
+        border-radius: var(--radius-small);
+        border: none;
+        margin: 0;
+        margin-right: 12px;
+
+        > span {
+            display: block;
+            transform: translateY(-5px);
+        }
+    }
+
+    .valueContainer {
+        gap: 16px;
+        padding: 0;
+        margin: 0 12px;
+        flex-wrap: nowrap;
+        overflow: auto;
+        border-radius: var(--radius-small);
+    }
+
+    .multiValue {
+        height: 40px;
+        display: flex;
+        position: relative;
+        border-radius: var(--radius-small);
+        background: var(--black);
+        color: var(--white);
+        overflow: hidden;
+        margin: 0;
+        padding: 0 16px;
+        flex-shrink: 0;
+
+        font-size: 40px;
+
+        &:hover {
+            .multiValueRemove {
+                display: flex;
+                pointer-events: auto;
+            }
+        }
+    }
+
+    .multiValueLabel {
+        color: var(--white);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+
+    .multiValueRemove {
+        position: absolute;
+        display: none;
+        pointer-events: auto;
+        inset: 0;
+        color: transparent !important;
+        background: var(--red) !important;
+
+        &::after {
+            content: 'x';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, calc(-50% - 3px));
+            color: var(--white) !important;
+        }
+    }
+
+    .menu {
+        z-index: 2;
+        margin: 16px 0;
+        border-radius: var(--radius-normal);
+        overflow: auto;
+        color: var(--black);
+        font-size: 40px;
+        outline: 12px solid var(--black);
+    }
+
+    .menuList {
+        padding: 0;
+    }
+
+    .option {
+        &:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+    }
+
+    .optionWrapper {
+        position: relative;
+        height: 64px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--white);
+
+        &:hover {
+            background: var(--off-white);
+        }
+    }
+
+    .value {
+        margin-left: 16px;
+        flex-shrink: 0;
+    }
+
+    .statsWrapper {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        flex-shrink: 1;
+        width: 50%;
+        height: 100%;
+    }
+
+    .statsValue {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 24px 0 0 24px;
+        background: var(--off-white);
+        color: var(--white);
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        span {
+            transform: translateY(-2px);
+        }
+    }
+}
