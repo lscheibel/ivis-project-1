@@ -7,4 +7,14 @@
         'interests skills'
         'averageSkillScore averageSkillScore';
     grid-gap: 24px;
+
+    @media screen and (max-width: 1024px) {
+        grid-template-rows: repeat(4, auto);
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            'strengths'
+            'skills'
+            'interests'
+            'averageSkillScore';
+    }
 }
