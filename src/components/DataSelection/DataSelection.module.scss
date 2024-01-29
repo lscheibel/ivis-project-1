@@ -46,6 +46,7 @@
         border: none;
         margin: 0;
         margin-right: 12px;
+        cursor: pointer;
 
         > span {
             display: block;
@@ -112,16 +113,51 @@
 
     .menu {
         z-index: 2;
-        margin: 16px 0;
-        border-radius: var(--radius-normal);
+        margin: 12px 0;
+        border-radius: 0 0 var(--radius-normal) var(--radius-normal);
         overflow: auto;
         color: var(--black);
         font-size: 40px;
         outline: 12px solid var(--black);
+        position: absolute;
+        left: 0;
+        right: 0;
+        background: var(--black);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sortWrapper {
+        padding: 4px;
+        margin: 0 16px;
+        font-size: 16px;
+        background: var(--off-white);
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        overflow: auto;
+        border-radius: 999px;
+    }
+
+    .sortButton {
+        background: none;
+        border: 2px solid var(--black);
+        border-radius: 99px;
+        padding: 0 8px;
+        flex-shrink: 0;
+        cursor: pointer;
+
+        &.active {
+            background: var(--black);
+            color: var(--white);
+        }
     }
 
     .menuList {
         padding: 0;
+        border-radius: var(--radius-normal);
+        overflow: auto;
     }
 
     .option {
@@ -140,6 +176,7 @@
         justify-content: space-between;
         align-items: center;
         background: var(--white);
+        cursor: pointer;
 
         &:hover {
             background: var(--off-white);

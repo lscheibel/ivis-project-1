@@ -1,10 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './DataSelection.module.scss';
-import { computed, data } from '../../assets/data';
-import Select, { OptionProps } from 'react-select';
+import { computed, data, DataEntry } from '../../assets/data';
+import Select, { MenuProps, OptionProps } from 'react-select';
 import cn from 'classnames';
 import sampleSize from 'lodash/sampleSize';
 import range from 'lodash/range';
+import { atom, useAtom } from 'react-atomic-state';
+
+const sortByAtom = atom<keyof DataEntry>('meanSkillScore');
 
 const DropdownIndicator = () => {
     return (
@@ -15,22 +18,24 @@ const DropdownIndicator = () => {
 };
 
 const colors = [
-    '#FCF3F4',
-    '#FAE6E9',
-    '#F9DADD',
-    '#F8CED0',
-    '#F5C2C3',
-    '#F2B6B6',
-    '#F0AAA8',
-    '#EC9E9B',
-    '#E9918C',
+    '#F7DDDC',
+    '#F6D4D2',
+    '#F5C9C8',
+    '#F3C0BD',
+    '#F1B7B2',
+    '#EFACA8',
+    '#EDA39E',
+    '#EB9994',
+    '#E98F89',
     '#E6857E',
 ];
 
 const Option = (props: OptionProps<any>) => {
+    const sortBy = useAtom(sortByAtom);
     const entity = data[(props.data as any).value];
-    const relativeSkillScore = entity.meanSkillScore / computed.maxSkillScore;
-    const bgColor = colors[Math.floor(relativeSkillScore * colors.length)];
+    const skillValue = entity[sortBy] as number;
+    const relativeSkillScore = skillValue / computed.maxSkillScore;
+    const bgColor = colors[Math.floor(relativeSkillScore * colors.length - 1)];
 
     return (
         <div className={styles.optionWrapper} ref={props.innerRef} {...props.innerProps}>
@@ -40,9 +45,34 @@ const Option = (props: OptionProps<any>) => {
                     className={styles.statsValue}
                     style={{ width: `${relativeSkillScore * 100}%`, background: bgColor }}
                 >
-                    <span>{entity.meanSkillScore.toFixed(1)}</span>
+                    <span>{skillValue.toFixed(1)}</span>
                 </div>
             </div>
+        </div>
+    );
+};
+
+const Menu = (props: MenuProps<any>) => {
+    const sortBy = useAtom(sortByAtom);
+    const allSkills = ['meanSkillScore', ...data[0].allSkills.keys()] as Array<keyof DataEntry>;
+
+    const sortBySkill = (skill: keyof DataEntry) => () => {
+        sortByAtom.set(skill);
+    };
+
+    return (
+        <div className={styles.menu} ref={props.innerRef} {...props.innerProps}>
+            <div className={cn(styles.sortWrapper, 'hide-scrollbar')}>
+                {allSkills.map((skill) => (
+                    <button
+                        className={cn(styles.sortButton, { [styles.active]: sortBy === skill })}
+                        onClick={sortBySkill(skill)}
+                    >
+                        {(computed.skillLabels as any)[skill]}
+                    </button>
+                ))}
+            </div>
+            {props.children}
         </div>
     );
 };
@@ -53,11 +83,13 @@ export interface DataSelectionProps {
 }
 
 const DataSelection = ({ value, onChange }: DataSelectionProps) => {
+    const sortBy = useAtom(sortByAtom);
+
     const options = useMemo(() => {
         return [...data]
             .map((e, i) => ({ value: i, label: e.alias, data: e }))
-            .sort((a, b) => a.data.meanSkillScore - b.data.meanSkillScore);
-    }, []);
+            .sort((a, b) => (a.data[sortBy] as number) - (b.data[sortBy] as number));
+    }, [sortBy]);
 
     const pickFiveRandom = () => {
         onChange(sampleSize(range(data.length), 5));
@@ -95,7 +127,7 @@ const DataSelection = ({ value, onChange }: DataSelectionProps) => {
                     option: () => styles.option,
                 }}
                 isClearable={false}
-                components={{ DropdownIndicator, IndicatorSeparator: null, Option }}
+                components={{ DropdownIndicator, IndicatorSeparator: null, Option, Menu }}
                 isMulti
                 value={value.map((v) => ({ value: v, label: data[v].alias }))}
                 onChange={(e) => onChange(e.map((e) => e.value))}
