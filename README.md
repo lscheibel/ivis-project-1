@@ -1,11 +1,17 @@
-# My Project
+# Group Forming Visualization
 
-> A template for the next project.
+> Submitted as part of the DH2321 Information Visualization course at KTH university.
+
+## Data manipulation
+
+Raw data can be found in the assets directory. It has been exported from the google sheet (part of the course) with minor manipulation, consisting only of renamed columns.
+
+---
 
 ## Development
 
+Install dependencies with `npm install`.
 Use `npm run dev` to start the dev server.
-Please make sure to configure ESLint and Prettier in your IDE before developing.
 
 ### Setup Intellij IDEs
 
